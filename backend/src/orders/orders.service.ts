@@ -1,18 +1,36 @@
 import { HttpStatus, HttpException, Injectable } from '@nestjs/common';
 import { CreateOrderDto, OrderResponseDto } from './dto/order.dto';
 import { FilmsRepository } from '../repository/films.repository.mongodb';
+import { formUniqueStringArray } from '../utils/utils';
 
 @Injectable()
 export class OrdersService {
   constructor(private readonly repository: FilmsRepository) {}
 
+  /**
+   * Создание заказа
+   * @param createOrdersDto - данные для создания заказа
+   * @returns - отчет о созданном заказе
+   */
   async create(createOrdersDto: CreateOrderDto[]) {
+    const filmIdsUnique = formUniqueStringArray(
+      createOrdersDto.map((el) => el.film),
+    ); // готовим список ID уникальных фильмов из заказа
+    const films = await this.repository.findByIds(filmIdsUnique); // один раз обращаемся к базе данных и сразу забираем все уникальные фильмы по заказу
+
     // проверки по бизнес-логике
+    if (films.length != filmIdsUnique.length)
+      // найдены не все фильмы
+      throw new HttpException(
+        'Не все фильмы найдены в базе',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    // В этом цикле мы только делаем бизнес-валидацию без обращения к базе,
+    // потому нагрузка на систему минимальна
+    const resp: OrderResponseDto[] = []; // сразу формируем данные для ответа
     for (let i = 0; i < createOrdersDto.length; i++) {
-      const film = await this.repository.findById(createOrdersDto[i].film);
-      if (!film || film === null) {
-        throw new HttpException('Фильм не найден', HttpStatus.BAD_REQUEST);
-      }
+      const film = films.find((el) => (el.id = createOrdersDto[i].film));
       const seance = film.schedule.find(
         (el) => el.id === createOrdersDto[i].session,
       );
@@ -40,24 +58,12 @@ export class OrdersService {
           HttpStatus.BAD_REQUEST,
         );
       }
-    }
-
-    // собственно говоря действия
-    const resp: OrderResponseDto[] = [];
-    for (let i = 0; i < createOrdersDto.length; i++) {
-      const film = await this.repository.findById(createOrdersDto[i].film);
-      const seance = film.schedule.find(
-        (el) => el.id === createOrdersDto[i].session,
-      );
-      const taken = `${createOrdersDto[i].row}:${createOrdersDto[i].seat}`;
       seance.taken.push(taken);
-      await this.repository.updateFilmSeanceTaken(
-        createOrdersDto[i].film,
-        createOrdersDto[i].session,
-        seance.taken,
-      );
       resp.push(OrderResponseDto.from({ ...createOrdersDto[i] }));
     }
-    return { items: resp, total: resp.length };
+
+    // раз сюда дошли, значит все проверки пройдены, можно менять базу - бронировать места
+    await this.repository.updateFilms(films); // собственно говоря обновление базы
+    return { items: resp, total: resp.length }; // возврат ответа требуемого
   }
 }

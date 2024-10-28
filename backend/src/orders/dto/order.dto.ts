@@ -8,6 +8,7 @@ import {
   IsInt,
   IsEmail,
   IsArray,
+  ArrayMinSize,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -62,6 +63,7 @@ export class CreateOrderRequestDto {
 
   @IsArray()
   @ValidateNested({ each: true })
+  @ArrayMinSize(1)
   @Type(() => CreateOrderDto)
   tickets: CreateOrderDto[];
 }
