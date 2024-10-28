@@ -7,11 +7,6 @@ import { formUniqueStringArray } from '../utils/utils';
 export class OrdersService {
   constructor(private readonly repository: FilmsRepository) {}
 
-  /**
-   * Создание заказа
-   * @param createOrdersDto - данные для создания заказа
-   * @returns - отчет о созданном заказе
-   */
   async create(createOrdersDto: CreateOrderDto[]) {
     const filmIdsUnique = formUniqueStringArray(
       createOrdersDto.map((el) => el.film),
@@ -20,14 +15,11 @@ export class OrdersService {
 
     // проверки по бизнес-логике
     if (films.length != filmIdsUnique.length)
-      // найдены не все фильмы
       throw new HttpException(
         'Не все фильмы найдены в базе',
         HttpStatus.BAD_REQUEST,
       );
 
-    // В этом цикле мы только делаем бизнес-валидацию без обращения к базе,
-    // потому нагрузка на систему минимальна
     const resp: OrderResponseDto[] = []; // сразу формируем данные для ответа
     for (let i = 0; i < createOrdersDto.length; i++) {
       const film = films.find((el) => (el.id = createOrdersDto[i].film));
