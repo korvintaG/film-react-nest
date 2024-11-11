@@ -8,7 +8,6 @@ import { isInstance } from '../utils/utils';
 export class DBMSModule {
   static forRoot(): DynamicModule {
     const importArr = [];
-    //importArr.push(ConfigModule);
     const databaseDriver = configProvider.useValue.database.driver;
     console.log(`Try starting ${databaseDriver} connection`);
     if (!isInstance(databaseDriver, DBMSSupport))
