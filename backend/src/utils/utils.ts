@@ -9,3 +9,10 @@ export function formUniqueStringArray(array: string[]): string[] {
     return array.indexOf(item) == pos;
   });
 }
+
+export function isInstance<T extends object>(
+  value: string | number,
+  type: T,
+): type is T {
+  return Object.values(type).includes(value);
+}
