@@ -1,6 +1,6 @@
-import { FilmDocument, SeanceDocument } from '../entities/film.entity';
+import { IFilm, ISchedule } from '../../types/custom';
 
-export class SeanceDto {
+export class ScheduleDto {
   constructor(
     public id: string,
     public daytime: Date,
@@ -11,10 +11,10 @@ export class SeanceDto {
     public taken: string[],
   ) {}
 
-  static from = (seanceDocument: SeanceDocument): SeanceDto =>
-    new SeanceDto(
+  static from = (seanceDocument: ISchedule): ScheduleDto =>
+    new ScheduleDto(
       seanceDocument.id,
-      seanceDocument.daytime,
+      new Date(seanceDocument.daytime),
       seanceDocument.hall,
       seanceDocument.rows,
       seanceDocument.seats,
@@ -36,7 +36,7 @@ export class FilmDto {
     public description: string,
   ) {}
 
-  static from = (filmDocument: FilmDocument): FilmDto =>
+  static from = (filmDocument: IFilm): FilmDto =>
     new FilmDto(
       filmDocument.id,
       filmDocument.rating,

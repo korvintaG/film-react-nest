@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { FilmDocument, IFilm } from '../films/entities/film.entity';
+import { FilmDocument } from './film.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { IFilmsRepository, IFilm } from '../../types/custom';
 
 /**
  * Рабочий вариант репозитория в MongoDB
  */
 @Injectable()
-export class FilmsRepository {
+export class FilmsRepository implements IFilmsRepository {
   constructor(@InjectModel('Film') private filmModel: Model<FilmDocument>) {}
 
   /**

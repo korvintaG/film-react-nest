@@ -1,11 +1,17 @@
-import { HttpStatus, HttpException, Injectable } from '@nestjs/common';
+import { HttpStatus, HttpException, Injectable, Inject } from '@nestjs/common';
 import { CreateOrderDto, OrderResponseDto } from './dto/order.dto';
-import { FilmsRepository } from '../repository/films.repository.mongodb';
+import { FilmsRepository as MongoDBFilmsRepository } from '../DBMS/mongodb/films.repository';
+import { FilmsRepository as PostgresFilmsRepository } from '../DBMS/postgres/films.repository';
 import { formUniqueStringArray } from '../utils/utils';
 
 @Injectable()
 export class OrdersService {
-  constructor(private readonly repository: FilmsRepository) {}
+  constructor(
+    @Inject('FILMS_REPOSITORY')
+    private readonly repository:
+      | MongoDBFilmsRepository
+      | PostgresFilmsRepository,
+  ) {}
 
   async create(createOrdersDto: CreateOrderDto[]) {
     const filmIdsUnique = formUniqueStringArray(
@@ -36,9 +42,15 @@ export class OrdersService {
         throw new HttpException('Недопустимое место', HttpStatus.BAD_REQUEST);
       if (createOrdersDto[i].price != seance.price)
         throw new HttpException('Неверная цена', HttpStatus.BAD_REQUEST);
-      if (createOrdersDto[i].daytime != seance.daytime)
+      if (
+        new Date(createOrdersDto[i].daytime).toISOString() !=
+        new Date(seance.daytime).toISOString()
+      )
         throw new HttpException(
-          'Неверное дата-время сеанса',
+          'Неверное дата-время сеанса. Пришло в DTO: ' +
+            new Date(createOrdersDto[i].daytime) +
+            ' А должно быть: ' +
+            new Date(seance.daytime),
           HttpStatus.BAD_REQUEST,
         );
 

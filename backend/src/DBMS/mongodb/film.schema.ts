@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { IFilm, ISchedule } from '../../types/custom';
 
 export type FilmDocument = Film & Document<Types.ObjectId>;
 export type SeanceDocument = Seance & Document<Types.ObjectId>;
 
-export interface ISeance {
+/*export interface ISeance {
   id: string;
   daytime: Date;
   hall: number;
@@ -25,9 +26,9 @@ export interface IFilm {
   about: string;
   description: string;
   schedule: Seance[];
-}
+}*/
 
-export class Seance implements ISeance {
+export class Seance implements ISchedule {
   @Prop({ type: String, required: true })
   id: string;
   @Prop({ type: Date, required: true })

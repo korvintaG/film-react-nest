@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigModule } from '@nestjs/config';
 import * as path from 'node:path';
-import { MongooseModule } from '@nestjs/mongoose';
+import { FilmsRepository } from './DBMS/films.repository';
 
 import { configProvider } from './app.config.provider';
 import { FilmsModule } from './films/films.module';
 import { OrdersModule } from './orders/orders.module';
+import { DBMSModule } from './DBMS/database.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { OrdersModule } from './orders/orders.module';
       isGlobal: true,
       cache: true,
     }),
-    MongooseModule.forRoot(configProvider.useValue.database.url, {}),
+    DBMSModule.forRoot(),
+    FilmsRepository.forRoot(),
     FilmsModule,
     OrdersModule,
     ServeStaticModule.forRoot({
