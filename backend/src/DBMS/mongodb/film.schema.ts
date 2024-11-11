@@ -5,29 +5,6 @@ import { IFilm, ISchedule } from '../../types/custom';
 export type FilmDocument = Film & Document<Types.ObjectId>;
 export type SeanceDocument = Seance & Document<Types.ObjectId>;
 
-/*export interface ISeance {
-  id: string;
-  daytime: Date;
-  hall: number;
-  rows: number;
-  seats: number;
-  price: number;
-  taken: string[];
-}
-
-export interface IFilm {
-  id: string;
-  rating: number;
-  director: string;
-  tags: string[];
-  image: string;
-  cover: string;
-  title: string;
-  about: string;
-  description: string;
-  schedule: Seance[];
-}*/
-
 export class Seance implements ISchedule {
   @Prop({ type: String, required: true })
   id: string;

@@ -9,7 +9,6 @@ export class DBMSModule {
   static forRoot(): DynamicModule {
     const importArr = [];
     const databaseDriver = configProvider.useValue.database.driver;
-    console.log(`Try starting ${databaseDriver} connection`);
     if (!isInstance(databaseDriver, DBMSSupport))
       throw new Error(`${databaseDriver} не поддерживается!`);
     if (databaseDriver === DBMSSupport.POSTGRESQL)

@@ -48,10 +48,6 @@ export class FilmsRepository implements IFilmsRepository {
     return newFilm;
   }
 
-  /**
-   * получить список всех фильмов
-   * @returns список объектов всех фильмов
-   */
   async findAll() {
     const res = await this.filmRepository.find({
       relations: { schedule: true },
@@ -59,11 +55,6 @@ export class FilmsRepository implements IFilmsRepository {
     return res.map(FilmsRepository.film2FilmDocument);
   }
 
-  /**
-   * получить фильм по его ID
-   * @param id - ID фильма
-   * @returns объект фильма
-   */
   async findById(id: string) {
     const res = await this.filmRepository.findOne({
       where: { id },
@@ -72,11 +63,6 @@ export class FilmsRepository implements IFilmsRepository {
     return FilmsRepository.film2FilmDocument(res);
   }
 
-  /**
-   * получить фильмы по списку их ID
-   * @param ids - список ID фильмов
-   * @returns список объектов фильмов
-   */
   async findByIds(ids: string[]) {
     const res = await this.filmRepository.find({
       where: { id: In(ids) },
@@ -85,10 +71,6 @@ export class FilmsRepository implements IFilmsRepository {
     return res.map(FilmsRepository.film2FilmDocument);
   }
 
-  /**
-   * обновить в базе фильмы по списку
-   * @param films - объекты фильмов для обновления
-   */
   async updateFilms(films: IFilm[]) {
     for (let i = 0; i < films.length; i++) {
       await this.filmRepository.save(

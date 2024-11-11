@@ -14,7 +14,6 @@ import { isInstance } from '../utils/utils';
 export class FilmsRepository {
   static forRoot(): DynamicModule {
     const databaseDriver = configProvider.useValue.database.driver;
-    console.log(`Try starting ${databaseDriver} repository`);
     if (!isInstance(databaseDriver, DBMSSupport))
       throw new Error(`${databaseDriver} не поддерживается!`);
 
