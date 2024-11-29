@@ -1,6 +1,6 @@
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository }}/backend
 
 name: publish_backend
 on: [push]
@@ -49,5 +49,5 @@ jobs:
           with:
             context: ./backend
             push: true
-            tags: backend
+            tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
