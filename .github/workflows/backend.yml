@@ -6,7 +6,19 @@ name: publish_backend
 on: [push]
 
 jobs:
+  test: # Тестирование, тут всё просто
+    runs-on: ubuntu-latest 
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: cd ./backend
+      - run: npm ci
+      - run: npm run test
+
   build-and-publish-latest:
+    needs: test # Запускать только если тест прошёл успешно
     runs-on: ubuntu-latest
     permissions:
       contents: read
