@@ -1,11 +1,12 @@
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/backend
+  IMAGE_NAME: ${{ github.repository }}/frontend
 
-name: publish_backend
+name: publish_frontend
 on: [push]
 
 jobs:
+
   test: # Тестирование, тут всё просто
     runs-on: ubuntu-latest 
     steps:
@@ -14,14 +15,11 @@ jobs:
         with:
           node-version: 22
       - name: Package Install
-        working-directory: ./backend
+        working-directory: ./frontend
         run: npm i
       - name: Lint
-        working-directory: ./backend
+        working-directory: ./frontend
         run: npm run lint
-      - name: Test
-        working-directory: ./backend
-        run: npm run test
 
   build-and-publish-latest:
     needs: test # Запускать только если тест прошёл успешно
@@ -47,7 +45,7 @@ jobs:
         - name: Build and push Docker image
           uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
           with:
-            context: ./backend
+            context: ./frontend
             push: true
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
