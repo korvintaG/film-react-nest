@@ -1,8 +1,8 @@
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: backend
+  IMAGE_NAME: "backend"
 
-name: publish backend
+name: publish_backend
 on: [push]
 
 jobs:
