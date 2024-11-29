@@ -1,0 +1,88 @@
+services:
+
+  frontend:
+    image: ghcr.io/korvintag/frontend
+    container_name: frontend
+    volumes:
+      - ./frontend/dist:/app/dist
+    env_file:
+      .env
+    build: 
+      context: ./frontend # директория сборки (контекст)
+      dockerfile: Dockerfile-frontend # Имя файла описания контейнера (Dockerfile)
+    networks:
+      - internal
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    env_file:
+      .env
+    networks:
+      - internal
+
+  backend:
+    image: ghcr.io/korvintag/backend
+    container_name: backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./logs:/usr/src/app/logs
+    build: 
+      context: ./backend # директория сборки (контекст)
+      dockerfile: Dockerfile-backend # Имя файла описания контейнера (Dockerfile)
+    env_file:
+      .env
+    networks:
+      - internal
+    depends_on:
+      - postgres
+
+  nginx:
+    image: ghcr.io/korvintag/nginx
+    container_name: nginx
+    volumes:
+      - ./frontend/dist:/opt/site
+    ports:
+      - "80:80"
+    build: 
+      context: ./nginx # директория сборки (контекст)
+      dockerfile: Dockerfile-nginx # Имя файла описания контейнера (Dockerfile)
+    networks:
+      - internet
+      - internal
+    depends_on:
+      - frontend
+      - backend
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    env_file:
+      .env
+    networks:
+      - internet
+      - internal
+    depends_on:
+      - postgres
+
+volumes:
+  pgadmin:
+    name: pgadmin
+
+networks:
+  internal:
+    name: internal
+    driver: bridge
+    internal: true
+  internet:
+    name: internet
+    driver: bridge

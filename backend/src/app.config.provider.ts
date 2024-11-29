@@ -5,6 +5,13 @@ export enum DBMSSupport {
   POSTGRESQL = 'postgres',
 }
 
+export enum LoggerSupport {
+  dev = 'dev',
+  json = 'json',
+  tskv = 'tskv'
+}
+
+
 export const configProvider = {
   imports: [ConfigModule.forRoot()],
   provide: 'CONFIG',
@@ -17,11 +24,13 @@ export const configProvider = {
       password: process.env.DATABASE_PASSWORD,
       databaseName: process.env.DATABASE_NAME,
     },
+    logger: process.env.logger
   },
 };
 
 export interface AppConfig {
   database: AppConfigDatabase;
+  logger: LoggerSupport
 }
 
 export interface AppConfigDatabase {
