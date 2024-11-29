@@ -9,7 +9,7 @@ services:
       .env
     build: 
       context: ./frontend # директория сборки (контекст)
-      dockerfile: Dockerfile-frontend # Имя файла описания контейнера (Dockerfile)
+      dockerfile: Dockerfile # Имя файла описания контейнера (Dockerfile)
     networks:
       - internal
 
@@ -34,7 +34,7 @@ services:
       - ./logs:/usr/src/app/logs
     build: 
       context: ./backend # директория сборки (контекст)
-      dockerfile: Dockerfile-backend # Имя файла описания контейнера (Dockerfile)
+      dockerfile: Dockerfile # Имя файла описания контейнера (Dockerfile)
     env_file:
       .env
     networks:
@@ -51,7 +51,7 @@ services:
       - "80:80"
     build: 
       context: ./nginx # директория сборки (контекст)
-      dockerfile: Dockerfile-nginx # Имя файла описания контейнера (Dockerfile)
+      dockerfile: Dockerfile # Имя файла описания контейнера (Dockerfile)
     networks:
       - internet
       - internal
