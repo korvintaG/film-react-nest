@@ -32,9 +32,7 @@ describe('FilmsController', () => {
         filmsController.findSchedule(item);
         expect(filmsService.findSchedule).toHaveBeenCalledWith(item);
       });
-
-
     });      
-    
+ 
     
   
