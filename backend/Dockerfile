@@ -20,5 +20,5 @@ COPY --from=builder /app/dist ./dist
 COPY /public ./public
 
 EXPOSE 3000
-CMD [ "sh", "-c", "node ./dist/main.js > /usr/src/app/logs/backend.log 2>&1" ]
+CMD [ "sh", "-c", "node ./dist/main.js" ]
 

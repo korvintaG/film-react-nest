@@ -1,6 +1,6 @@
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: "backend"
+  IMAGE_NAME: ${{ github.repository }}
 
 name: publish_backend
 on: [push]

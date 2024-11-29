@@ -30,8 +30,6 @@ services:
     container_name: backend
     ports:
       - "3000:3000"
-    volumes:
-      - ./logs:/usr/src/app/logs
     build: 
       context: ./backend # директория сборки (контекст)
       dockerfile: Dockerfile # Имя файла описания контейнера (Dockerfile)
