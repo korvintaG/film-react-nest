@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: 22
       - run: cd ./backend
-      - run: npm ci
+      - run: npm i
       - run: npm run test
 
   build-and-publish-latest:
