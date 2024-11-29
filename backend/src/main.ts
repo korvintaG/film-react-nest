@@ -3,7 +3,6 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { configProvider } from './app.config.provider';
 import { factoryLogger } from './logger/factory.logger';
-import {DevLogger} from './logger/dev.logger';
 
 import 'dotenv/config';
 
@@ -16,9 +15,8 @@ async function bootstrap() {
   });
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
-  const logger=factoryLogger(configProvider.useValue.logger);
+  const logger = factoryLogger(configProvider.useValue.logger);
   if (logger) app.useLogger(logger);
-  //app.useLogger(new DevLogger());
   await app.listen(3000);
 }
 bootstrap();

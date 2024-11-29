@@ -8,9 +8,8 @@ export enum DBMSSupport {
 export enum LoggerSupport {
   dev = 'dev',
   json = 'json',
-  tskv = 'tskv'
+  tskv = 'tskv',
 }
-
 
 export const configProvider = {
   imports: [ConfigModule.forRoot()],
@@ -24,13 +23,13 @@ export const configProvider = {
       password: process.env.DATABASE_PASSWORD,
       databaseName: process.env.DATABASE_NAME,
     },
-    logger: process.env.logger
+    logger: process.env.logger,
   },
 };
 
 export interface AppConfig {
   database: AppConfigDatabase;
-  logger: LoggerSupport
+  logger: LoggerSupport;
 }
 
 export interface AppConfigDatabase {

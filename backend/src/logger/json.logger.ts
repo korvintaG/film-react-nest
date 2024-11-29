@@ -17,5 +17,5 @@ export class JsonLogger implements LoggerService {
   error(message: any, ...optionalParams: any[]) {
     console.error(this.formatMessage('error', message, optionalParams));
   }
-// .....
+  // .....
 }
