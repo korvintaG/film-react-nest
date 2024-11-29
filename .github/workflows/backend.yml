@@ -13,9 +13,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: cd ./backend
-      - run: npm i
-      - run: npm run test
+      - name: Package Install
+        working-directory: ./backend
+        run: npm i
+      - name: Test
+        working-directory: ./backend
+        run: npm run test
 
   build-and-publish-latest:
     needs: test # Запускать только если тест прошёл успешно
