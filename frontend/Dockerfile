@@ -1,7 +1,10 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
-COPY package*.json /app/
-COPY tsconfig*.json /app/
-RUN npm i
-COPY . /app/
-CMD [ "sh", "-c", "npm run build" ]
+COPY package.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+FROM nginx:1.19-alpine AS production
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder /app/dist /opt/site/

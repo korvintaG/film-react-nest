@@ -1,29 +1,17 @@
 services:
 
-  frontend:
-    image: ghcr.io/korvintag/frontend
-    container_name: frontend
-    volumes:
-      - ./frontend/dist:/app/dist
-    env_file:
-      .env
-    build: 
-      context: ./frontend # директория сборки (контекст)
-      dockerfile: Dockerfile # Имя файла описания контейнера (Dockerfile)
-    networks:
-      - internal
-
   postgres:
     image: postgres
     container_name: postgres
     ports:
       - "5432:5432"
     volumes:
-      - ./db_data:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
     env_file:
       .env
     networks:
       - internal
+    restart: unless-stopped
 
   backend:
     image: ghcr.io/korvintag/backend
@@ -39,23 +27,38 @@ services:
       - internal
     depends_on:
       - postgres
+    restart: unless-stopped
 
-  nginx:
-    image: ghcr.io/korvintag/nginx
-    container_name: nginx
-    volumes:
-      - ./frontend/dist:/opt/site
-    ports:
-      - "80:80"
+  pginit:
+    image: ghcr.io/korvintag/pginit
+    container_name: pginit
     build: 
-      context: ./nginx # директория сборки (контекст)
+      context: ./backend/test # директория сборки (контекст)
       dockerfile: Dockerfile # Имя файла описания контейнера (Dockerfile)
+    env_file:
+      .env
     networks:
-      - internet
       - internal
     depends_on:
-      - frontend
+      - postgres
       - backend
+
+  frontend:
+    image: ghcr.io/korvintag/frontend
+    container_name: frontend
+    env_file:
+      .env
+    build: 
+      context: ./frontend # директория сборки (контекст)
+      dockerfile: Dockerfile # Имя файла описания контейнера (Dockerfile)
+    ports:
+      - "80:80"
+    networks:
+      - internal
+      - internet
+    depends_on:
+      - backend
+    restart: unless-stopped
 
   pgadmin:
     image: dpage/pgadmin4
@@ -71,8 +74,11 @@ services:
       - internal
     depends_on:
       - postgres
+    restart: unless-stopped
 
 volumes:
+  db:
+    name: db
   pgadmin:
     name: pgadmin
 
