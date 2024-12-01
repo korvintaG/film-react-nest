@@ -42,6 +42,7 @@ services:
     depends_on:
       - postgres
       - backend
+    restart: on-failure
 
   frontend:
     image: ghcr.io/korvintag/frontend
