@@ -1,3 +1,4 @@
+# инициализация базы данными, написано не очень красиво, но работает
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}

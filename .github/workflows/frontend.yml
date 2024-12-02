@@ -7,7 +7,7 @@ on: [push]
 
 jobs:
 
-  test: # Тестирование, тут всё просто
+  test: # Тестирование
     runs-on: ubuntu-latest 
     steps:
       - uses: actions/checkout@v4
