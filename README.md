@@ -15,8 +15,3 @@ git clone git@github.com:korvintaG/film-react-nest.git
 4. запустить команду 
 docker compose up --build
 
-### Из докер-контейнеров:
-1. Скачать файл docker-compose.yml
-2. заполнить .env
-3. запустить команду 
-docker compose up 
